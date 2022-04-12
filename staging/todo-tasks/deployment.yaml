@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-deployment
+  name: todo-tasks-deployment
   namespace: roey-training
   labels:
     app: todo
@@ -9,14 +9,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: client
+      app: todo-tasks
   template:
     metadata:
       labels:
-        app: client
+        app: todo-tasks
     spec:
       containers:
-      - name: client
-        image: roia5/client:latest
+      - name: todo-tasks
+        image: roia5/todo-tasks:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 4000
