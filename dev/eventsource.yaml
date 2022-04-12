@@ -1,0 +1,37 @@
+# Info on GitHub Webhook: https://developer.github.com/v3/repos/hooks/#create-a-hook
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: github
+spec:
+  service:
+    ports:
+      - port: 12000
+        targetPort: 12000
+  github:
+    todo:
+      repositories:
+        - owner: Roia5
+          names:
+            - todo-tasks
+            - todo-users
+            - todo-ui
+      webhook:
+        endpoint: /todo
+        port: "12000"
+        method: POST
+        # url the event-source will use to register at Github.
+        # This url must be reachable from outside the cluster.
+        # The name for the service is in `<event-source-name>-eventsource-svc` format.
+        # You will need to create an Ingress or Openshift Route for the event-source service so that it can be reached from GitHub.
+        url: http://20.82.37.12
+      events:
+        - "*"
+      #webhookSecret:
+      apiToken:
+        name: github-access
+        #key: secret
+        key: token
+      insecure: true
+      active: true
+      contentType: "json"
