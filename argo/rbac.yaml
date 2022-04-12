@@ -41,7 +41,7 @@ rules:
 - apiGroups:
   - argoproj.io
   resources:
-  - workflows
+  - "*"
   verbs:
   - create
   - get

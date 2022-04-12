@@ -4,7 +4,6 @@ metadata:
   name: webhook
 spec:
   template:
-    #serviceAccountName: operate-workflow-sa
     serviceAccountName: argo-events-sa
   dependencies:
   - name: github
@@ -13,90 +12,59 @@ spec:
   triggers:
   - template:
       name: trigger
-      k8s:
-        operation: create
+      argoWorkflow:
+        group: argoproj.io
+        version: v1alpha1
+        resource: workflows
+        operation: submit
         source:
           resource:
             apiVersion: argoproj.io/v1alpha1
             kind: Workflow
             metadata:
-              generateName: webhook-
+              generateName: todo-
               namespace: argo
             spec:
-              entrypoint: whalesay
+              entrypoint: build
               serviceAccountName: workflow
-              arguments:
-                parameters:
-                - name: message
-                  # the value will get overridden by event payload from test-dep
-                  value: hello world
+              volumes:
+              - name: regcred
+                secret:
+                  secretName: regcred
+                  items:
+                    - key: .dockerconfigjson
+                      path: config.json
+              - name: github-access
+                secret:
+                  secretName: github-access
+                  items:
+                    - key: token
+                      path: token
+                    - key: user
+                      path: user
+                    - key: email
+                      path: email
               templates:
-              - name: whalesay
-                inputs:
-                  parameters:
-                  - name: message
-                container:
-                  image: docker/whalesay:latest
-                  command: [cowsay]
-                  #args: ["{{inputs.parameters.message}}"]
-        #parameters:
-        #  - src:
-        #      dependencyName: github
-        #      dataKey: body
-        #    dest: spec.arguments.parameters.0.value
-#      argoWorkflow:
-#        group: argoproj.io
-#        version: v1alpha1
-#        resource: workflows
-#        operation: submit
-#        source:
-#          resource:
-#            apiVersion: argoproj.io/v1alpha1
-#            kind: Workflow
-#            metadata:
-#              generateName: todo-
-#              namespace: workflows
-#            spec:
-#              entrypoint: build
-#              serviceAccountName: workflow
-#              volumes:
-#              - name: regcred
-#                secret:
-#                  secretName: regcred
-#                  items:
-#                    - key: .dockerconfigjson
-#                      path: config.json
-#              - name: github-access
-#                secret:
-#                  secretName: github-access
-#                  items:
-#                    - key: token
-#                      path: token
-#                    - key: user
-#                      path: user
-#                    - key: email
-#                      path: email
-#              templates:
-#              - name: build
-#                dag:
-#                  tasks:
-#                  - name: build
-#                    templateRef:
-#                      name: container-image
-#                      template: build-kaniko-git
-#                      clusterScope: true
-#                    arguments:
-#                      parameters:
-#                      - name: repo_url
-#                        value: ""
-#                      - name: repo_ref
-#                        value: ""
-#                      - name: repo_commit_id
-#                        value: ""
-#                      - name: container_image
-#                        value: vfarcic/
-#                      - name: container_tag
-#                        value: ""
+              - name: build
+                dag:
+                  tasks:
+                  - name: build
+                    templateRef:
+                      name: container-image
+                      template: build-kaniko-git
+                      clusterScope: true
+                    arguments:
+                      parameters:
+                      - name: repo_url
+                        value: ""
+                      - name: repo_ref
+                        value: ""
+                      - name: repo_commit_id
+                        value: ""
+                      - name: container_image
+                        value: roia5/
+                      - name: container_tag
+                        value: ""
 #                  - name: promote-staging
 #                    templateRef:
 #                      name: promote
@@ -158,41 +126,41 @@ spec:
 #                  volumeMounts:
 #                  - name: github-access
 #                    mountPath: /.github/
-#        parameters:
-#        - src:
-#            dependencyName: github
-#            dataKey: body.repository.git_url
-#          dest: spec.templates.0.dag.tasks.0.arguments.parameters.0.value
-#        - src:
-#            dependencyName: github
-#            dataKey: body.ref
-#          dest: spec.templates.0.dag.tasks.0.arguments.parameters.1.value
-#        - src:
-#            dependencyName: github
-#            dataKey: body.after
-#          dest: spec.templates.0.dag.tasks.0.arguments.parameters.2.value
-#        - src:
-#            dependencyName: github
-#            dataKey: body.repository.name
-#          dest: spec.templates.0.dag.tasks.0.arguments.parameters.3.value
-#          operation: append
-#        - src:
-#            dependencyName: github
-#            dataKey: body.after
-#          dest: spec.templates.0.dag.tasks.0.arguments.parameters.4.value
-#        - src:
-#            dependencyName: github
-#            dataKey: body.repository.name
-#          dest: spec.templates.0.dag.tasks.1.arguments.parameters.4.value
-#        - src:
-#            dependencyName: github
-#            dataKey: body.after
-#          dest: spec.templates.0.dag.tasks.1.arguments.parameters.5.value
-#        - src:
-#            dependencyName: github
-#            dataKey: body.repository.name
-#          dest: spec.templates.0.dag.tasks.2.arguments.parameters.4.value
-#        - src:
-#            dependencyName: github
-#            dataKey: body.after
-#          dest: spec.templates.0.dag.tasks.2.arguments.parameters.5.value
+        parameters:
+        - src:
+            dependencyName: github
+            dataKey: body.repository.git_url
+          dest: spec.templates.0.dag.tasks.0.arguments.parameters.0.value
+        - src:
+            dependencyName: github
+            dataKey: body.ref
+          dest: spec.templates.0.dag.tasks.0.arguments.parameters.1.value
+        - src:
+            dependencyName: github
+            dataKey: body.after
+          dest: spec.templates.0.dag.tasks.0.arguments.parameters.2.value
+        - src:
+            dependencyName: github
+            dataKey: body.repository.name
+          dest: spec.templates.0.dag.tasks.0.arguments.parameters.3.value
+          operation: append
+        - src:
+            dependencyName: github
+            dataKey: body.after
+          dest: spec.templates.0.dag.tasks.0.arguments.parameters.4.value
+        #- src:
+        #    dependencyName: github
+        #    dataKey: body.repository.name
+        #  dest: spec.templates.0.dag.tasks.1.arguments.parameters.4.value
+        #- src:
+        #    dependencyName: github
+        #    dataKey: body.after
+        #  dest: spec.templates.0.dag.tasks.1.arguments.parameters.5.value
+        #- src:
+        #    dependencyName: github
+        #    dataKey: body.repository.name
+        #  dest: spec.templates.0.dag.tasks.2.arguments.parameters.4.value
+        #- src:
+        #    dependencyName: github
+        #    dataKey: body.after
+        #  dest: spec.templates.0.dag.tasks.2.arguments.parameters.5.value
