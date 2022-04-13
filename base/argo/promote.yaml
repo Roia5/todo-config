@@ -22,7 +22,7 @@ spec:
         set -e
         git clone https://$(cat /.github/token)@github.com/{{inputs.parameters.repo_owner}}/{{inputs.parameters.repo_name}}
         cd {{inputs.parameters.repo_name}}
-        sleep 20
+        sleep 2
         echo BEFORE:
         cat {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}/deployment.yaml
         echo AFTER:
