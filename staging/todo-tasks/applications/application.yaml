@@ -16,9 +16,6 @@ spec:
     repoURL: https://github.com/Roia5/todo-config.git  # Can point to either a Helm chart repo or a git repo.
     targetRevision: HEAD  # For Helm, this refers to the chart version.
     path: staging/todo-tasks  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
-    directory:
-      exclude: applications
-      recurse: true
     kustomize:
       images:
       - roia5/todo-tasks:latest
