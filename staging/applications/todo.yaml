@@ -16,6 +16,9 @@ spec:
     repoURL: https://github.com/Roia5/todo-config.git  # Can point to either a Helm chart repo or a git repo.
     targetRevision: HEAD  # For Helm, this refers to the chart version.
     path: staging/applications  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    directory:
+      exclude: "todo.yaml"
+      recurse: true
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://tainingaks-dns-c582352e.hcp.westeurope.azmk8s.io:443
