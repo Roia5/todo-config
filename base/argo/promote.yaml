@@ -15,7 +15,8 @@ spec:
       - name: image_name
       - name: tag
     script:
-      image: alpine/git:latest
+      #image: alpine/git:latest
+      image: vfarcic/kustomize:latest
       command: [sh]
       source: |
         set -e
