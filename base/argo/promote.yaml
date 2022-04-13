@@ -24,13 +24,13 @@ spec:
         cd {{inputs.parameters.repo_name}}
         sleep 2
         echo BEFORE:
-        cat {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}/applications/application.yaml
+        cat {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml
         echo AFTER:
-        cat {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}/applications/application.yaml | sed -e "s@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:.*@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:{{inputs.parameters.tag}}@g" | tee {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}/applications/application.yaml
+        cat {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml | sed -e "s@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:.*@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:{{inputs.parameters.tag}}@g" | tee {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml
         git config user.name "$(cat /.github/user)"
         git config user.email "$(cat /.github/email)"
-        git add {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}/applications/application.yaml
-        git commit -m "Upgraded {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}/applications/application.yaml with the tag {{inputs.parameters.tag}}"
+        git add {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml
+        git commit -m "Upgraded {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml with the tag {{inputs.parameters.tag}}"
         git push
       volumeMounts:
       - name: github-access
