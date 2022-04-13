@@ -18,4 +18,4 @@ spec:
       - name: todo-tasks
         image: roia5/todo-tasks
         ports:
-        - containerPort: 4000
+        - containerPort: 3000
