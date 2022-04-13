@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
       - name: todo-ui
-        image: roia5/todo-ui:latest
+        image: roia5/todo-ui
         ports:
         - containerPort: 3000

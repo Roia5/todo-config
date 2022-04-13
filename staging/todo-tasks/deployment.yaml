@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
       - name: todo-tasks
-        image: roia5/todo-tasks:latest
+        image: roia5/todo-tasks
         ports:
         - containerPort: 4000
