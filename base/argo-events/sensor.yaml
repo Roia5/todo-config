@@ -76,7 +76,7 @@ spec:
                       - name: environment
                         value: staging
                       - name: repo_owner
-                        value: roia5
+                        value: Roia5
                       - name: repo_name
                         value: todo-config
                       - name: image_owner
