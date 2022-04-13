@@ -15,7 +15,7 @@ spec:
       - name: image_name
       - name: tag
     script:
-      image: alpine:latest
+      image: alpine/git:latest
       command: [sh]
       source: |
         set -e
