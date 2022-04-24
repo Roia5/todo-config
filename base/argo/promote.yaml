@@ -24,7 +24,7 @@ spec:
         echo BEFORE:
         cat {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml
         echo SED COMMAND EXECUTING
-        sed -e "s@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:.*@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:{{inputs.parameters.tag}}@g" -i tee {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml
+        sed -e "s@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:.*@- {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:{{inputs.parameters.tag}}@g" -i {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml
         echo AFTER:
         cat {{inputs.parameters.environment}}/applications/{{inputs.parameters.image_name}}.yaml
         git config user.name "$(cat /.github/user)"
