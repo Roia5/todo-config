@@ -16,7 +16,7 @@ data:
         name: my-minio-cred
         key: secretkey
   executor: |
-    image: argoproj/argocli:latest
+    image: argoproj/argoexec:latest
     resources:
       requests:
         cpu: 10m
