@@ -1,0 +1,76 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: workflow-controller-configmap
+  namespace: argo
+data:
+  artifactRepository: |
+    s3:
+      bucket: my-bucket
+      endpoint: minio:9000
+      insecure: true
+      accessKeySecret:
+        name: my-minio-cred
+        key: accesskey
+      secretKeySecret:
+        name: my-minio-cred
+        key: secretkey
+  executor: |
+    image: argoproj/argocli:latest
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+  images: |
+    argoproj/argosay:v1:
+      command: [cowsay]
+    argoproj/argosay:v2:
+      command: [/argosay]
+    docker/whalesay:latest:
+       command: [cowsay]
+    python:alpine3.6:
+       command: [python3]
+  links: |
+    - name: Workflow Link
+      scope: workflow
+      url: http://logging-facility?namespace=${metadata.namespace}&workflowName=${metadata.name}&startedAt=${status.startedAt}&finishedAt=${status.finishedAt}
+    - name: Pod Link
+      scope: pod
+      url: http://logging-facility?namespace=${metadata.namespace}&podName=${metadata.name}&startedAt=${status.startedAt}&finishedAt=${status.finishedAt}
+    - name: Pod Logs Link
+      scope: pod-logs
+      url: http://logging-facility?namespace=${metadata.namespace}&podName=${metadata.name}&startedAt=${status.startedAt}&finishedAt=${status.finishedAt}
+    - name: Event Source Logs Link
+      scope: event-source-logs
+      url: http://logging-facility?namespace=${metadata.namespace}&podName=${metadata.name}&startedAt=${status.startedAt}&finishedAt=${status.finishedAt}
+    - name: Sensor Logs Link
+      scope: sensor-logs
+      url: http://logging-facility?namespace=${metadata.namespace}&podName=${metadata.name}&startedAt=${status.startedAt}&finishedAt=${status.finishedAt}
+  metricsConfig: |
+    enabled: true
+    path: /metrics
+    port: 9090
+  namespaceParallelism: '10'
+  persistence: |
+    connectionPool:
+      maxIdleConns: 100
+      maxOpenConns: 0
+      connMaxLifetime: 0s
+    nodeStatusOffLoad: true
+    archive: true
+    archiveTTL: 7d
+    postgresql:
+      host: postgres
+      port: 5432
+      database: postgres
+      tableName: argo_workflows
+      userNameSecret:
+        name: argo-postgres-config
+        key: username
+      passwordSecret:
+        name: argo-postgres-config
+        key: password
+  retentionPolicy: |
+    completed: 10
+    failed: 3
+    errored: 3
