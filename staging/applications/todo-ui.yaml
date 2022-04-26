@@ -18,7 +18,7 @@ spec:
     path: staging/todo-ui  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
     kustomize:
       images:
-      - roia5/todo-ui:c8d602abffa910f386f74e9847ff1568c2f042d6
+      - roia5/todo-ui:f6fc017d3e59759774961f4901f77f156ab773ca
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://tainingaks-dns-c582352e.hcp.westeurope.azmk8s.io:443
